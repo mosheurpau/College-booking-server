@@ -27,9 +27,16 @@ async function run() {
     const collegeCollection = client
       .db("College-booking")
       .collection("colleges");
+    const reviewsCollection = client
+      .db("College-booking")
+      .collection("reviews");
 
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
+      res.send(result);
+    });
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
       res.send(result);
     });
 
