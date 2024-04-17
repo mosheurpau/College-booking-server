@@ -35,9 +35,17 @@ async function run() {
       const result = await collegeCollection.find().toArray();
       res.send(result);
     });
+
     app.get("/reviews", async (req, res) => {
       const result = await reviewsCollection.find().toArray();
       res.send(result);
+    });
+
+    // Get individual college by ID
+    app.get("/college/:id", async (req, res) => {
+      const { id } = req.params;
+      const college = await collegeCollection.findOne({ _id: id });
+      res.send(college);
     });
 
     // Send a ping to confirm a successful connection
