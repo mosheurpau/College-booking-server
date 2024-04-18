@@ -30,6 +30,9 @@ async function run() {
     const reviewsCollection = client
       .db("College-booking")
       .collection("reviews");
+    const bookingCollection = client
+      .db("College-booking")
+      .collection("booking");
 
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
@@ -46,6 +49,12 @@ async function run() {
       const { id } = req.params;
       const college = await collegeCollection.findOne({ _id: id });
       res.send(college);
+    });
+
+    app.post("/bookingCollege", async (req, res) => {
+      const bookings = req.body;
+      const result = await bookingCollection.insertOne(bookings);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
