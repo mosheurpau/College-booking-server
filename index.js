@@ -44,6 +44,12 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/review", async (req, res) => {
+      const newReview = req.body;
+      const result = await reviewsCollection.insertOne(newReview);
+      res.send(result);
+    });
+
     // Get individual college by ID
     app.get("/college/:id", async (req, res) => {
       const { id } = req.params;
