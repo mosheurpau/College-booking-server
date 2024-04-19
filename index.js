@@ -57,6 +57,16 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/bookingCollege/:email", async (req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      const query = { candidateEmail: email };
+      const cursor = await bookingCollection.find(query);
+      const colleges = await cursor.toArray();
+      console.log(colleges);
+      res.send(colleges);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
