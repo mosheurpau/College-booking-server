@@ -33,6 +33,13 @@ async function run() {
     const bookingCollection = client
       .db("College-booking")
       .collection("booking");
+    const usersCollection = client.db("College-booking").collection("users");
+
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      const result = await usersCollection.insertOne(newUser);
+      res.send(result);
+    });
 
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
