@@ -41,6 +41,18 @@ async function run() {
       res.send(result);
     });
 
+    // insert user email if user doesn't exists
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await usersCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ massage: "user already exists", insertedId: null });
+      }
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray();
       res.send(result);
