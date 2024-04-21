@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xs3vutx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -35,12 +35,6 @@ async function run() {
       .collection("booking");
     const usersCollection = client.db("College-booking").collection("users");
 
-    app.post("/users", async (req, res) => {
-      const newUser = req.body;
-      const result = await usersCollection.insertOne(newUser);
-      res.send(result);
-    });
-
     // insert user email if user doesn't exists
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -50,6 +44,41 @@ async function run() {
         return res.send({ massage: "user already exists", insertedId: null });
       }
       const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    app.get("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      const query = { email: email };
+      const cursor = await usersCollection.find(query);
+      const userInfo = await cursor.toArray();
+      console.log(userInfo);
+      res.send(userInfo);
+    });
+
+    // Update userInfo by id
+    app.put("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const userInfo = req.body;
+      console.log(id, userInfo);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateUserInfo = {
+        $set: {
+          name: userInfo?.name,
+          email: userInfo?.email,
+          img: userInfo?.img,
+          university: userInfo?.university,
+          address: userInfo?.address,
+        },
+      };
+
+      const result = await usersCollection.updateOne(
+        filter,
+        updateUserInfo,
+        options
+      );
       res.send(result);
     });
 
