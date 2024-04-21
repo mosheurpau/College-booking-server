@@ -71,6 +71,7 @@ async function run() {
           img: userInfo?.img,
           university: userInfo?.university,
           address: userInfo?.address,
+          newEmail: userInfo?.newEmail,
         },
       };
 
